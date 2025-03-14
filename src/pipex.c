@@ -18,6 +18,15 @@ void	error(char *msg)
 	exit(EXIT_FAILURE);
 }
 
+char	*ft_strjoin_free(char *s1,char *s2)
+{
+	char	*res;
+
+	res = ft_strjoin(s1, s2);
+	free(s1);
+	return (res);
+}
+
 void	init_files(char *in_path, char *out_path, int *infile, int *outfile)
 {
 	*infile = open(in_path, O_RDONLY);
