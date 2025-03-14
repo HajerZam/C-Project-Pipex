@@ -37,7 +37,8 @@ char	*check_executable(char **paths, char *cmd)
 		full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (!full_path)
 			error("malloc");
-		ft_printf(full_path, "%s/%s", paths[i], cmd);
+		full_path = ft_strjoin(paths[i],"/");
+		full_path = ft_strjoin_free(full_path, cmd);
 		if (access(full_path, X_OK) == 0)
 			return (full_path);
 		free(full_path);
@@ -51,7 +52,14 @@ char	*find_path(char *cmd, char **envp)
 	char	**paths;
 	char	*path_env;
 	char	*full_path;
+	int		i;
 
+	if (cmd[0] == '/' || cmd[0] == '.')
+	{
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+		return (NULL);
+	}
 	path_env = get_path_env(envp);
 	if (!path_env)
 		return (NULL);
@@ -59,6 +67,9 @@ char	*find_path(char *cmd, char **envp)
 	if (!paths)
 		error("malloc");
 	full_path = check_executable(paths, cmd);
+	i = 0;
+	while (paths[i])
+		free(paths[i++]);
 	free(paths);
 	return (full_path);
 }
