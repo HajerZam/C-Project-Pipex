@@ -1,6 +1,6 @@
-NAME = pipex
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -gdwarf
+NAME = pipex
 
 SRC_DIR = src
 INC_DIR = include
