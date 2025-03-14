@@ -22,14 +22,14 @@
 # include "libft.h"
 # include "ft_printf.h"
 
-char    *find_path(char *cmd, char **envp);
-char    *get_path_env(char **envp);
-char    *check_executable(char **paths, char *cmd);
-void    error(char *msg);
-void    child_process(char *cmd, char **envp, int *fd, int infile);
-void    parent_process(char *cmd, char **envp, int *fd, int infile);
-void    execute(char *cmd, char **envp);
-void    create_child(char *cmd, char **envp, int *fd, int infile);
-void    create_parent(char *cmd, char **envp, int *fd, int outfile);
+char	*find_path(char *cmd, char **envp);
+char	*get_path_env(char **envp);
+char	*check_executable(char **paths, char *cmd);
+void	error(char *msg);
+void	child_process(char *cmd, char **envp, int *fd, int infile);
+void	parent_process(char *cmd, char **envp, int *fd, int infile);
+void	execute(char *cmd, char **envp);
+void	create_child(char *cmd, char **envp, int *fd, int infile);
+void	create_parent(char *cmd, char **envp, int *fd, int outfile);
 
 #endif

@@ -22,6 +22,7 @@ void	create_child(char *cmd, char **envp, int *fd, int infile)
 	if (pid == 0)
 		child_process(cmd, envp, fd, infile);
 }
+
 void	create_parent(char *cmd, char **envp, int *fd, int outfile)
 {
 	wait(NULL);

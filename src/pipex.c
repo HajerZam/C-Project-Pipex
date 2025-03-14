@@ -18,7 +18,7 @@ void	error(char *msg)
 	exit(EXIT_FAILURE);
 }
 
-void	initialize_files(char *infile_path, char *outfile_path, int *infile, int *outfile)
+void	init_files(char *infil_path, char *outfil_path, int *infil, int *outfil)
 {
 	*infile = open(infile_path, O_RDONLY);
 	if (*infile < 0)
@@ -28,18 +28,18 @@ void	initialize_files(char *infile_path, char *outfile_path, int *infile, int *o
 		error("outfile");
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	int fd[2];
-	int infile;
-	int outfile;
+	int	fd[2];
+	int	infile;
+	int	outfile;
 
 	if (argc != 5)
 	{
 		write(2, "Usage: ./pipex infile cmd1 cmd2 outfile\n", 40);
 		return (1);
 	}
-	initialize_files(argv[1], argv[4], &infile, &outfile);
+	inite_files(argv[1], argv[4], &infile, &outfile);
 	if (pipe(fd) == -1)
 		error("pipe");
 	create_child(argv[2], envp, fd, infile);
