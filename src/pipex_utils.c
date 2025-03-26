@@ -37,7 +37,7 @@ char	*check_executable(char **paths, char *cmd)
 		full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (!full_path)
 			error("malloc");
-		full_path = ft_strjoin(paths[i],"/");
+		full_path = ft_strjoin(paths[i], "/");
 		full_path = ft_strjoin_free(full_path, cmd);
 		if (access(full_path, X_OK) == 0)
 			return (full_path);
@@ -85,7 +85,9 @@ void	execute(char *cmd, char **envp)
 	cmd_path = find_path(args[0], envp);
 	if (!cmd_path)
 	{
-		perror("Command not found");
+		write(2, "command not found: ", 19);
+		write(2, args[0], ft_strlen(args[0]));
+		write(2, "\n", 1);
 		exit(127);
 	}
 	execve(cmd_path, args, envp);
