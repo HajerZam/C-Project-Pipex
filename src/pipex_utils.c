@@ -85,9 +85,7 @@ void	execute(char *cmd, char **envp)
 	cmd_path = find_path(args[0], envp);
 	if (!cmd_path)
 	{
-		write(2, "command not found: ", 19);
-		write(2, args[0], ft_strlen(args[0]));
-		write(2, "\n", 1);
+		perror("Command not found");
 		exit(127);
 	}
 	execve(cmd_path, args, envp);
