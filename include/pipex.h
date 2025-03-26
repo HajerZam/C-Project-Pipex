@@ -26,6 +26,7 @@ char	*find_path(char *cmd, char **envp);
 char	*get_path_env(char **envp);
 char	*check_executable(char **paths, char *cmd);
 void	error(char *msg);
+char	*ft_strjoin_free(char *s1, char *s2);
 void	child_process(char *cmd, char **envp, int *fd, int infile);
 void	parent_process(char *cmd, char **envp, int *fd, int infile);
 void	execute(char *cmd, char **envp);
