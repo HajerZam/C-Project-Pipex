@@ -25,8 +25,13 @@ void	create_child(char *cmd, char **envp, int *fd, int infile)
 
 void	create_parent(char *cmd, char **envp, int *fd, int outfile)
 {
-	wait(NULL);
-	parent_process(cmd, envp, fd, outfile);
+	pid_t	pid;
+
+	pid = fork();
+	if (pid < 0)
+		error("fork");
+	if (pid == 0)
+		parent_process(cmd, envp, fd, outfile);
 }
 
 void	child_process(char *cmd, char **envp, int *fd, int infile)
