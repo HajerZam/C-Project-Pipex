@@ -31,10 +31,10 @@ void	init_files(char *in_path, char *out_path, int *infile, int *outfile)
 {
 	*infile = open(in_path, O_RDONLY);
 	if (*infile < 0)
-		error("infile");
+		perror("infile");
 	*outfile = open(out_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (*outfile < 0)
-		error("outfile");
+		perror("outfile");
 }
 
 int	main(int argc, char **argv, char **envp)
