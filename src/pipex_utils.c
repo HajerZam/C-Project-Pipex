@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+#include "../include/ft_printf.h"
 
 char	*get_path_env(char **envp)
 {
@@ -90,4 +91,5 @@ void	execute(char *cmd, char **envp)
 	}
 	execve(cmd_path, args, envp);
 	error("execve");
+	exit(EXIT_FAILURE);
 }
