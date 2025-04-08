@@ -53,6 +53,8 @@ int	main(int argc, char **argv, char **envp)
 		error("pipe");
 	create_child(argv[2], envp, fd, infile);
 	create_parent(argv[3], envp, fd, outfile);
+	close(fd[0]);
+	close(fd[1]);
 	close(infile);
 	close(outfile);
 	return (0);
