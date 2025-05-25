@@ -1,244 +1,265 @@
-# C-Project-Pipex
-my sixth project in 42 common core, I am . . . f i n e( ._. )
-### **1. Understanding Unix**
+<h1 align="center">🔗 C-Project: Pipex</h1>
 
-Unix is an operating system that provides a way for programs to interact with the computer's hardware and other programs. It is powerful because of:
+<p align="center">
+  <img src="https://img.shields.io/badge/Language-C-blue.svg" />
+  <img src="https://img.shields.io/badge/42-Common%20Core-critical" />
+  <img src="https://img.shields.io/github/last-commit/HajerZam/C-Project-Pipex" />
+</p>
 
-- **Processes**: Every running program is a "process."
-- **Files**: Everything (even devices) is treated as a file.
-- **Pipes**: A way to send the output of one program as input to another.
+<p align="center">
+  💥 Sixth project in the 42 Common Core<br>
+  I am . . . f i n e ( ._. )
+</p>
 
-### **Basic Unix Commands**
+---
 
-These commands are commonly needed when testing a project:
+## 🧠 Project Overview
 
-- `ls` → List files
-- `cat file.txt` → Show contents of a file
-- `echo "hello"` → Print text
-- `> file.txt` → Redirect output to a file
-- `< file.txt` → Take input from a file
-- `|` → Pipe output of one command into another
+**Pipex** is a reproduction of how Unix handles pipes (`|`) in the shell.
+
+You will build a program that mimics the shell behavior for piping commands like:
+
+```bash
+< infile cmd1 | cmd2 > outfile
+````
+
+Implemented in C using:
+
+* `pipe()`
+* `fork()`
+* `dup2()`
+* `execve()`
+
+---
+
+## 🔧 Usage
+
+### Build
+
+```bash
+make
+```
+
+### Run
+
+```bash
+./pipex infile cmd1 cmd2 outfile
+```
+
+This is equivalent to:
+
+```bash
+< infile cmd1 | cmd2 > outfile
+```
 
 Example:
 
-```
-echo "Hello" | wc -c
-
-```
-
-This prints **6**, because "Hello" has 5 letters + 1 newline.
-
----
-
-### **2. Understanding Imperative Programming**
-
-Imperative programming refers to a style where step-by-step instructions are given to the computer. It differs from functional or declarative programming.
-
-### **Key Concepts**
-
-- **Variables**: Store values
-- **Loops**: Repeat actions
-- **Conditions**: Make decisions (`if`, `else`)
-- **Functions**: Group reusable code
-- **Pointers & Memory**: Work with raw memory (important in C)
-
-Example in C:
-
-```c
-#include <stdio.h>
-
-int main()
-{
-    int x;
-    
-    x = 5;
-    if (x > 0)
-    {
-        printf("Positive number\n");
-    }
-    return (0);
-}
-
+```bash
+./pipex input.txt "grep hello" "wc -l" output.txt
 ```
 
 ---
 
-### **3. How Pipes Work in Unix (The Heart of Pipex)**
+## 📁 File Structure
 
-A **pipe (`|`)** allows two programs to communicate.
-
-Example in shell:
-
-```
-ls | grep "file"
-
-```
-
-- `ls` lists files.
-- `grep "file"` filters the output to show only lines containing "file."
-
-### **How Pipes Work in C**
-
-A **pipe** is a communication channel between processes. It is created using `pipe()`.
-
-```c
-#include <unistd.h>
-#include <stdio.h>
-
-int main()
-{
-    int fd[2]; // File descriptors (fd[0] = read, fd[1] = write)
-    pipe(fd);  // Create the pipe
-    if (fork() == 0) { // Child process
-        close(fd[0]); // Close unused read end
-        write(fd[1], "Hello", 5);
-        close(fd[1]);
-    }
-    else
-    { // Parent process
-        char buffer[10];
-        close(fd[1]); // Close unused write end
-        read(fd[0], buffer, 5);
-        buffer[5] = '\0';
-        printf("Parent received: %s\n", buffer);
-        close(fd[0]);
-    }
-    return (0);
-}
-
-```
-
-### **What Happens Here?**
-
-1. A pipe (`fd[2]`) is created.
-2. The parent forks (creates a child process).
-3. The child writes "Hello" into the pipe.
-4. The parent reads "Hello" from the pipe.
+| File       | Purpose                              |
+| ---------- | ------------------------------------ |
+| `pipex.c`  | Main logic for parsing and executing |
+| `utils.c`  | String splitting, path resolving     |
+| `pipex.h`  | Header with macros and prototypes    |
+| `Makefile` | Builds your program                  |
 
 ---
 
-### **4. What Are Processes in Unix?**
+## 📚 Unix Concepts Recap
 
-A **process** is a running program. Every time a program is opened, a process is created in the system.
+### 📄 Everything is a File
 
-Examples:
+In Unix:
 
-- When `ls` is typed in the terminal, it starts a **process** that lists files.
-- When Chrome is opened, it starts a **process** for web browsing.
+* Files = text, devices, sockets, etc.
+* You use file descriptors (FDs) to access them
 
-Each process has:
+### 🔁 Pipes (`|`)
 
-- **A PID (Process ID)** → A unique number for each process.
-- **A Parent Process** → The process that created it.
-- **A Child Process** → A new process made by another process.
+A pipe sends the **stdout of one command** to the **stdin of another**.
 
-### **What Is a Parent and Child Process?**
+Example:
 
-When a process creates another process:
-
-- The **original** process → **Parent**
-- The **new** process → **Child**
-
-### **Example: Using `fork()`**
-
-```c
-#include <stdio.h>
-#include <unistd.h>
-
-int main()
-{
-    pid_t pid;
-    
-    pid = fork(); // Create a new process
-    if (pid == 0)
-    {
-        printf("I am the child process!\n");
-    }
-    else
-    {
-        printf("I am the parent process!\n");
-    }
-    return (0);
-}
-
+```bash
+echo "Hello" | wc -c  # Outputs: 6
 ```
 
 ---
 
-### **5. What Is Pipex?**
+## 🔍 How Pipes Work in C
 
-Pipex simulates how shell pipes work, using:
-
-- `pipe()` → Creates a pipe
-- `fork()` → Creates child processes
-- `dup2()` → Redirects input/output
-- `execve()` → Replaces a process with a new program
-
-### **Pipex Goal**
-
-The objective is to create a program that mimics:
-
-```
-./pipex file1 cmd1 cmd2 file2
-
-```
-
-Which should behave like:
-
-```
-< file1 cmd1 | cmd2 > file2
-
-```
-
----
-
-### **6. Key C Functions Needed**
-
-### **`pipe()`**
-
-Creates a communication channel between two processes.
+### 🔨 Code Example
 
 ```c
 int fd[2];
 pipe(fd);
-
+if (fork() == 0)
+{
+    close(fd[0]);           // Close read end
+    dup2(fd[1], STDOUT_FILENO); // Redirect stdout
+    execve(cmd1_path, cmd1_args, envp);
+}
+else
+{
+    close(fd[1]);           // Close write end
+    dup2(fd[0], STDIN_FILENO);  // Redirect stdin
+    execve(cmd2_path, cmd2_args, envp);
+}
 ```
 
-- `fd[0]` → Read end
-- `fd[1]` → Write end
+---
 
-### **`fork()`**
+## 🧵 Processes in Unix
 
-Creates a child process.
+Every program is a **process** with:
+
+* A **PID**
+* A **Parent**
+* Possibly **Children**
+
+Creating a new process:
 
 ```c
 pid_t pid = fork();
-
 ```
 
-- `pid == 0` → Child process
-- `pid > 0` → Parent process
+* `pid == 0` → child
+* `pid > 0` → parent
 
-### **`dup2()`**
+---
+
+## ⚙️ Core System Calls Used
+
+### `pipe(int fd[2])`
+
+Creates a pipe: `fd[0]` for reading, `fd[1]` for writing.
+
+### `fork()`
+
+Creates a new process.
+
+### `dup2(oldfd, newfd)`
 
 Redirects file descriptors.
 
 ```c
-dup2(fd[1], STDOUT_FILENO); // Redirect stdout to pipe write end
-
+dup2(fd[1], STDOUT_FILENO); // Redirect stdout to write end
 ```
 
-- `STDIN_FILENO` → Standard input (`0`)
-- `STDOUT_FILENO` → Standard output (`1`)
+### `execve()`
 
-### **`execve()`**
-
-Runs a new program inside a process.
+Runs a command.
 
 ```c
 char *cmd[] = {"/bin/ls", NULL};
 execve(cmd[0], cmd, envp);
-
 ```
 
-This replaces the current process with `/bin/ls`.
+---
+
+## 🧪 Testing
+
+### Basic Test
+
+```bash
+./pipex infile "cat" "wc -l" outfile
+```
+
+### Compare to Shell Output
+
+```bash
+diff <(./pipex in "grep hello" "wc -l" out) <( < in grep hello | wc -l > out )
+```
+
+---
+
+## 🛠 Bonus Ideas
+
+* Support more than 2 commands (multi-pipe)
+* Handle quotes and escaped characters
+* Implement your own `split()` and `get_path()`
+
+---
+
+## 🧠 Educational Notes
+
+### Imperative Programming
+
+Pipex teaches core Unix concepts like:
+
+* File descriptors
+* Process control
+* Inter-process communication
+* Executing binaries
+
+Plus, you'll get better at debugging with:
+
+* `strace ./pipex ...`
+* `valgrind ./pipex ...`
+
+---
+
+## 🧵 Debugging Tip
+
+Use these to see what’s happening behind the scenes:
+
+```bash
+valgrind ./pipex input "ls -l" "wc -l" output
+strace ./pipex input "ls" "wc" output
+```
+
+---
+
+## 🧼 Clean
+
+```bash
+make fclean
+```
+
+---
+
+## 🧊 Sample Output
+
+```bash
+$ cat infile
+hello
+hi there
+
+$ ./pipex infile "grep h" "wc -l" outfile
+
+$ cat outfile
+2
+```
+
+---
+
+## 🌐 Resources
+
+* [man execve](https://man7.org/linux/man-pages/man2/execve.2.html)
+* [man pipe](https://man7.org/linux/man-pages/man2/pipe.2.html)
+* [fork() visualizer](https://stackoverflow.com/questions/7346931/visual-explanation-of-fork-join)
+
+---
+
+## 💬 Final Words
+
+This project is where you:
+
+* Really understand how a shell works
+* Learn the cost of forking badly
+* Fall into `execve` segfault despair
+
+But then... you emerge **stronger** 💪
+
+---
+
+<p align="center">
+Made with 🍝, 🧠, and a little bit of crying by your local wizard.
+</p>
+```
