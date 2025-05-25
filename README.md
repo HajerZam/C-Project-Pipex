@@ -4,6 +4,7 @@
   <img src="https://img.shields.io/badge/Language-C-blue.svg" />
   <img src="https://img.shields.io/badge/42-Common%20Core-critical" />
   <img src="https://img.shields.io/github/last-commit/HajerZam/C-Project-Pipex" />
+  <img src="https://img.shields.io/badge/score-100-brightgreen?style=flat-square">
 </p>
 
 <p align="center">
